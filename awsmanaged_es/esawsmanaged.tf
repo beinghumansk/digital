@@ -9,7 +9,7 @@ resource "aws_elasticsearch_domain" "es" {
     elasticsearch_version = "2.3"
 
     advanced_options {
-        "rest.action.multi.allow_explicit_index" = true
+        "rest.action.multi.allow_explicit_index" = "true"
     }
     
     
