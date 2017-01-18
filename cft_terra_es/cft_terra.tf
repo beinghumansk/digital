@@ -1,7 +1,7 @@
 provider "aws" {
-  access_key = "AKIAICPATSPOC2NSVNQQ"
-  secret_key = "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"
-  region = "eu-west-1"
+  access_key = "${var.access_key}"
+  secret_key = "${var.secret_key}"
+  region = "${var.region}"
 }
 
 resource "aws_cloudformation_stack" "esstack" {
