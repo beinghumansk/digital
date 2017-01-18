@@ -8,7 +8,7 @@ resource "aws_cloudformation_stack" "esstack" {
   name = "elasticsearch-stack"
 
   template_body = <<STACK
-    {
+  {
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "This template creates a Stack on AWS CloudFormation for provisioning 3 servers in cluster.",
 	"Parameters": {
@@ -316,7 +316,7 @@ resource "aws_cloudformation_stack" "esstack" {
         	"Protocol" : "6",
         	"RuleAction" : "allow",
         	"Egress" : "false",
-        	"CidrBlock" : "142.252.0.0/16",
+        	"CidrBlock" : "176.253.117.59/32",
         	"PortRange" : {
           		"From" : "22",
           		"To" : "22"
@@ -353,7 +353,7 @@ resource "aws_cloudformation_stack" "esstack" {
         	"Protocol" : "6",
         	"RuleAction" : "allow",
         	"Egress" : "false",
-        	"CidrBlock" : "10.0.0.0/8",
+        	"CidrBlock" : "0.0.0.0/0",
         	"PortRange" : {
          		 "From" : "1024",
           		 "To" : "65535"
@@ -371,13 +371,31 @@ resource "aws_cloudformation_stack" "esstack" {
         	"Protocol" : "17",
         	"RuleAction" : "allow",
         	"Egress" : "false",
-        	"CidrBlock" : "10.0.0.0/8",
+        	"CidrBlock" : "0.0.0.0/0",
         	"PortRange" : {
          		 "From" : "1024",
           		 "To" : "65535"
         		}
       		}
-    	},								
+    	},		
+
+    	"IBEntry5forPubTierNACL" : {
+      		"Type" : "AWS::EC2::NetworkAclEntry",
+      		"Properties" : {
+        		"NetworkAclId" : {
+          			"Ref" : "PublicNACL"
+        		},
+        	"RuleNumber" : "140",
+        	"Protocol" : "6",
+        	"RuleAction" : "allow",
+        	"Egress" : "false",
+        	"CidrBlock" : "143.252.191.99/32",
+        	"PortRange" : {
+          		"From" : "22",
+          		"To" : "22"
+        		}
+      		}
+    	},						
 
    	    "OBEntry1forPubTierNACL" : {
       		"Type" : "AWS::EC2::NetworkAclEntry",
@@ -407,6 +425,7 @@ resource "aws_cloudformation_stack" "esstack" {
 								"apt-get update -y\n",
 								"apt-get install apache2 -y\n",
 								"service apache2 start\n",
+								"echo 'Hello from ElasticServer1' > /var/www/html/index.html\n",
 								"apt-get install -y awscli"
 							    ]
 						]
@@ -442,6 +461,105 @@ resource "aws_cloudformation_stack" "esstack" {
 			}
 		},
 
+
+		"ElasticServer2": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"ImageId": {"Fn::FindInMap": ["AWSSVNAMI", {"Ref": "AWS::Region"},"AMI"]},
+				"InstanceType": "t2.micro",
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": [
+							"", [
+								"#!/bin/bash -v \n",
+								"apt-get update -y\n",
+								"apt-get install apache2 -y\n",
+								"service apache2 start\n",
+								"echo 'Hello from ElasticServer2' > /var/www/html/index.html\n",
+								"apt-get install -y awscli"
+							    ]
+						]
+					}
+				},
+ 				
+ 				"NetworkInterfaces" : [{
+                 	"AssociatePublicIpAddress" : "True",
+                	"DeleteOnTermination" : "True",
+                 	"SubnetId" : { "Ref" : "PublicSubnet2" },
+                 	"DeviceIndex" : "0",
+                 	"GroupSet" : [ { "Ref" : "LinuxServerSecurityGroup" } ]
+            	}],
+
+				"KeyName": "staginges",
+				"Tags": [{
+					"Key": "Name",
+					"Value": "esubuntu02"
+					},  
+				    {
+					"Key": "Hostname",
+					"Value": "esubuntu02"
+					},
+				    {
+					"Key": "ServiceName",
+					"Value": {"Ref": "TagServiceName"}
+					},  
+					{
+					"Key": "ServiceOwner",
+					"Value": {"Ref": "TagServiceOwner"}
+				    } 
+				    ]
+			}
+		},
+
+		"ElasticServer3": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"ImageId": {"Fn::FindInMap": ["AWSSVNAMI", {"Ref": "AWS::Region"},"AMI"]},
+				"InstanceType": "t2.micro",
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": [
+							"", [
+								"#!/bin/bash -v \n",
+								"apt-get update -y\n",
+								"apt-get install apache2 -y\n",
+								"service apache2 start\n",
+								"echo 'Hello from ElasticServer3' > /var/www/html/index.html\n",
+								"apt-get install -y awscli"
+							    ]
+						]
+					}
+				},
+ 				
+ 				"NetworkInterfaces" : [{
+                 	"AssociatePublicIpAddress" : "True",
+                	"DeleteOnTermination" : "True",
+                 	"SubnetId" : { "Ref" : "PublicSubnet3" },
+                 	"DeviceIndex" : "0",
+                 	"GroupSet" : [ { "Ref" : "LinuxServerSecurityGroup" } ]
+            	}],
+
+				"KeyName": "staginges",
+				"Tags": [{
+					"Key": "Name",
+					"Value": "esubuntu03"
+					},  
+				    {
+					"Key": "Hostname",
+					"Value": "esubuntu03"
+					},
+				    {
+					"Key": "ServiceName",
+					"Value": {"Ref": "TagServiceName"}
+					},  
+					{
+					"Key": "ServiceOwner",
+					"Value": {"Ref": "TagServiceOwner"}
+				    } 
+				    ]
+			}
+		},
+
 		"LinuxServerSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
@@ -459,6 +577,12 @@ resource "aws_cloudformation_stack" "esstack" {
 				},
 				{
 					"IpProtocol": "tcp",
+					"FromPort": "22",
+					"ToPort": "22",
+					"CidrIp": "176.253.117.59/32"
+				},
+				{
+					"IpProtocol": "tcp",
 					"FromPort": "80",
 					"ToPort": "80",
 					"CidrIp": "0.0.0.0/0"
@@ -471,7 +595,7 @@ resource "aws_cloudformation_stack" "esstack" {
 				}],
 				"Tags" : [{
 					"Key": "Name",
-					"Value": "esubuntu01"
+					"Value": "esserversSG"
 					}]  
 			}
 		},
@@ -481,7 +605,7 @@ resource "aws_cloudformation_stack" "esstack" {
 
             "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
             "Properties": { 
-                 "Subnets" : [{"Ref" :"PublicSubnet1"}],
+                 "Subnets" : [{"Ref" :"PublicSubnet1"},{"Ref" :"PublicSubnet2"},{"Ref" :"PublicSubnet3"}],
 
                  "Listeners" : [ {
                       "LoadBalancerPort" : "80",
@@ -499,7 +623,7 @@ resource "aws_cloudformation_stack" "esstack" {
                      "Timeout" : "5"
                  },
                  "Scheme" : "internet-facing",
-                 "Instances" : [{"Ref" : "ElasticServer1"}],
+                 "Instances" : [{"Ref" : "ElasticServer1"},{"Ref" : "ElasticServer2"},{"Ref" : "ElasticServer3"}],
                  
                  "SecurityGroups" : [{"Ref" : "LinuxServerSecurityGroup"}],
                  "Tags": [
@@ -547,11 +671,14 @@ resource "aws_cloudformation_stack" "esstack" {
 		"PublicRouteTable": {
 			"Value": {"Ref": "PublicRouteTable"},
 			"Description": "Route table ID for Public Subnets."
-			}	
+			},
+		"ElasticSearchELB" : {
+            "Value" : {"Fn::GetAtt" : [ "ESELB", "DNSName" ]},
+            "Description" : "Zone Server ELB endpoint URL"
+        }
 
 	}
-}
-  
+} 
 
   STACK
 }
