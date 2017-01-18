@@ -1,0 +1,7 @@
+---
+  hosts: dev
+  user: ubuntu
+  sudo: yes
+  gather_facts: true
+  roles:
+    - ansible-role-java8

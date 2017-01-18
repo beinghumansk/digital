@@ -1,0 +1,2 @@
+elasticsearch_bind_address: "localhost"
+elasticsearch_http_port: 9200

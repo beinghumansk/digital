@@ -1,0 +1,59 @@
+cd /usr/local/etc/ansible
+
+ansible-playbook play.yml 
+
+PLAY [dev] *********************************************************************
+
+TASK [setup] *******************************************************************
+ok: [52.212.207.98]
+ok: [52.30.2.190]
+ok: [52.214.35.118]
+
+TASK [nover.java8 : Add Oracle Java PPA] ***************************************
+ok: [52.214.35.118]
+changed: [52.212.207.98]
+changed: [52.30.2.190]
+
+TASK [nover.java8 : Accept Oracle Java License] ********************************
+changed: [52.30.2.190]
+changed: [52.212.207.98]
+changed: [52.214.35.118]
+
+TASK [nover.java8 : Install Oracle Java 8] *************************************
+ok: [52.214.35.118]
+changed: [52.212.207.98]
+changed: [52.30.2.190]
+
+TASK [nover.elasticsearch : Add elasticsearch key] *****************************
+changed: [52.30.2.190]
+ok: [52.214.35.118]
+changed: [52.212.207.98]
+
+TASK [nover.elasticsearch : Add elasticsearch repo] ****************************
+ok: [52.214.35.118]
+changed: [52.212.207.98]
+changed: [52.30.2.190]
+
+TASK [nover.elasticsearch : Install elasticsearch] *****************************
+ok: [52.214.35.118] => (item=[u'elasticsearch'])
+changed: [52.212.207.98] => (item=[u'elasticsearch'])
+changed: [52.30.2.190] => (item=[u'elasticsearch'])
+
+TASK [nover.elasticsearch : Insert elasticsearch configuration] ****************
+ok: [52.214.35.118]
+changed: [52.212.207.98]
+changed: [52.30.2.190]
+
+TASK [nover.elasticsearch : Ensure elasticsearch is enabled on restarts] *******
+changed: [52.30.2.190]
+changed: [52.214.35.118]
+changed: [52.212.207.98]
+
+RUNNING HANDLER [nover.elasticsearch : elasticsearch_restart] ******************
+changed: [52.212.207.98]
+changed: [52.30.2.190]
+
+PLAY RECAP *********************************************************************
+52.212.207.98              : ok=10   changed=9    unreachable=0    failed=0   
+52.214.35.118              : ok=9    changed=2    unreachable=0    failed=0   
+52.30.2.190                : ok=10   changed=9    unreachable=0    failed=0   

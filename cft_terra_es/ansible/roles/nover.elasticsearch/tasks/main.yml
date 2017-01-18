@@ -1,0 +1,17 @@
+- name: Add elasticsearch key
+  apt_key: url="https://packages.elastic.co/GPG-KEY-elasticsearch"
+  
+- name: Add elasticsearch repo
+  apt_repository: repo='deb http://packages.elastic.co/elasticsearch/2.x/debian stable main' state=present update_cache=yes
+  
+- name: Install elasticsearch
+  apt: name={{ item }} state=present
+  with_items:
+    - elasticsearch
+  
+- name: Insert elasticsearch configuration
+  template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml owner=elasticsearch group=elasticsearch mode=0644
+  notify: elasticsearch_restart
+  
+- name: Ensure elasticsearch is enabled on restarts
+  command: update-rc.d elasticsearch defaults 95 10

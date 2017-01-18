@@ -1,0 +1,9 @@
+---
+- hosts: dev
+  user: ubuntu
+  become: yes
+  become_method : sudo
+  gather_facts: true
+  roles:
+    - nover.java8
+    - nover.elasticsearch
