@@ -324,24 +324,6 @@ resource "aws_cloudformation_stack" "esstack" {
       		}
     	},
 
-   		"IBEntry2forPubTierNACL" : {
-      		"Type" : "AWS::EC2::NetworkAclEntry",
-      		"Properties" : {
-        		"NetworkAclId" : {
-          			"Ref" : "PublicNACL"
-        		},
-        	"RuleNumber" : "110",
-        	"Protocol" : "6",
-        	"RuleAction" : "allow",
-        	"Egress" : "false",
-        	"CidrBlock" : "0.0.0.0/0",
-        	"PortRange" : {
-          		"From" : "80",
-          		"To" : "80"
-        		}
-      		}
-    	},
-
 
     	"IBEntry3forPubTierNACL" : {
       		"Type" : "AWS::EC2::NetworkAclEntry",
@@ -580,12 +562,6 @@ resource "aws_cloudformation_stack" "esstack" {
 					"FromPort": "22",
 					"ToPort": "22",
 					"CidrIp": "176.253.117.59/32"
-				},
-				{
-					"IpProtocol": "tcp",
-					"FromPort": "80",
-					"ToPort": "80",
-					"CidrIp": "0.0.0.0/0"
 				},
 				{
 					"IpProtocol": "tcp",
