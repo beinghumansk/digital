@@ -584,9 +584,9 @@ resource "aws_cloudformation_stack" "esstack" {
                  "Subnets" : [{"Ref" :"PublicSubnet1"},{"Ref" :"PublicSubnet2"},{"Ref" :"PublicSubnet3"}],
 
                  "Listeners" : [ {
-                      "LoadBalancerPort" : "80",
+                      "LoadBalancerPort" : "9200",
                       "InstancePort" : "TCP",
-                      "InstancePort" : "80",
+                      "InstancePort" : "9200",
                       "Protocol" : "TCP"
                       }
                  ],
