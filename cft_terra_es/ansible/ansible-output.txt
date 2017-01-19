@@ -57,3 +57,63 @@ PLAY RECAP *********************************************************************
 52.212.207.98              : ok=10   changed=9    unreachable=0    failed=0   
 52.214.35.118              : ok=9    changed=2    unreachable=0    failed=0   
 52.30.2.190                : ok=10   changed=9    unreachable=0    failed=0   
+ 
+--------------------------------------------------------------------------------
+Elastic Search Application is configure correctly on all three nodes, 
+
+mc109647:7digital amohammed$ for i in $(cat eshosts); do ssh ubuntu@$i "curl -X GET 'http://localhost:9200'"; done
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   361  100   361    0     0  46466      0 --:--:-- --:--:-- --:--:-- 6016{
+  "name" : "Arcanna",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "tDdb9qeZSoK_ePKkGMrYmA",
+  "version" : {
+    "number" : "2.4.4",
+    "build_hash" : "fcbb46dfd45562a9cf00c604b30849a6dec6b017",
+    "build_timestamp" : "2017-01-03T11:33:16Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.2"
+  },
+  "tagline" : "You Know, for Search"
+}
+6
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   361  100   361    0     0  44529      0 --:--:-- {-:--:-- --:--:--     0
+  "name" : "Tethlam",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "Ck2KDAlzTXS0qCfk9k7Zyg",
+  "version" : {
+    "number" : "2.4.4",
+    "build_hash" : "fcbb46dfd45562a9cf00c604b30849a6dec6b017",
+    "build_timestamp" : "2017-01-03T11:33:16Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.2"
+  },
+  "tagline" : "You Know, for Search"
+}
+--:--:-- --:--:-- 45125
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   357  100   357    0     0  37083      0 --:--:-- --:--:-- --:--:-- 3966{
+  "name" : "Ent",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "DdRSm0bnSVGSBXZmKYR3_Q",
+  "version" : {
+    "number" : "2.4.4",
+    "build_hash" : "fcbb46dfd45562a9cf00c604b30849a6dec6b017",
+    "build_timestamp" : "2017-01-03T11:33:16Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.2"
+  },
+  "tagline" : "You Know, for Search"
+}
+
+-----------------------------------------------------------------------
+Sample Index record, 
+mc109647:7digital amohammed$ ssh ubuntu@52.214.35.118 "curl -X GET 'http://localhost:9200/tutorial/helloworld/2'" 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   115  100   115    0     0  14227      0 --:--:-- --:--:-- --:--:-- 1437{"_index":"tutorial","_type":"helloworld","_id":"2","_version":1,"found":true,"_source":{ "message": "Whats up!" }}5
+
